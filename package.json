@@ -1,0 +1,55 @@
+{
+    "name": "nov-wechat",
+    "version": "0.0.1",
+    "description": "Lenovo service wechat jssdk.",
+    "homepage": "https://github.com/wh8766/nov-wechat",
+    "author": "w.hao <wh8766@qq.com>",
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:wh8766/nov-wechat.git"
+    },
+    "main": "lib/index.js",
+    "scripts": {
+        "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+        "build": "node build/build.js"
+    },
+    "dependencies": {
+        "browser-cookie": "^1.2.1"
+    },
+    "devDependencies": {
+        "babel-core": "^6.22.1",
+        "babel-jest": "^21.0.2",
+        "babel-loader": "^7.1.1",
+        "babel-plugin-dynamic-import-node": "^1.2.0",
+        "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+        "babel-plugin-transform-runtime": "^6.22.0",
+        "babel-preset-env": "^1.3.2",
+        "babel-preset-stage-2": "^6.22.0",
+        "chalk": "^2.0.1",
+        "extract-text-webpack-plugin": "^3.0.0",
+        "file-loader": "^1.1.4",
+        "friendly-errors-webpack-plugin": "^1.6.1",
+        "html-webpack-plugin": "^2.30.1",
+        "jest": "^21.2.0",
+        "node-notifier": "^5.1.2",
+        "optimize-css-assets-webpack-plugin": "^3.2.0",
+        "ora": "^1.2.0",
+        "portfinder": "^1.0.13",
+        "rimraf": "^2.6.0",
+        "semver": "^5.3.0",
+        "shelljs": "^0.7.6",
+        "uglifyjs-webpack-plugin": "^1.1.1",
+        "webpack": "^3.10.0",
+        "webpack-bundle-analyzer": "^2.9.0",
+        "webpack-dev-server": "^2.9.1",
+        "webpack-merge": "^4.1.0"
+    },
+    "engines": {
+        "node": ">= 6.0.0",
+        "npm": ">= 3.0.0"
+    },
+    "keywords": [
+        "nov-plugin"
+    ],
+    "license": "MIT"
+}
