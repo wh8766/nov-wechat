@@ -27,12 +27,15 @@
     	<div class="panel-heading">设置JSSDK相关方法</div>
     	<div class="panel-body">
             <p>
-                <button class="btn btn-danger" id="action-config">initWechatShare</button>
-                <button class="btn btn-danger" id="action-update">updateWechatShare</button>
+                <code>initWechatShare</code> 和 <code>initWechatJSSDK</code>
+                均返回Promise 对象。
+            </p>
+            <p>
+                <button class="btn btn-danger" id="action-config">init share</button>
+                <button class="btn btn-danger" id="action-update">update share</button>
             </p>
             <p>
                 <button class="btn btn-danger" id="action-more-config">choose image</button>
-                <button class="btn btn-danger" id="action-more-config-jq">choose image by jq</button>
             </p>
     	</div>
     </div>
@@ -40,6 +43,8 @@
     <div class="panel panel-danger">
     	<div class="panel-heading">获取openid</div>
     	<div class="panel-body">
+            <p>需要注意的是，正在执行location jump 时，此刻返回的openid = null 需要在代码里判断openid 的可用性</p>
+            <p>在这个过程中网关会丢失hash 内容，所以我们将hash 存放在 SessionStorage 里 key = <code>nov-url-hash</code></p>
             <button class="btn btn-danger" id="action-get-openid">获取openid</button>
     	</div>
     </div>
@@ -48,7 +53,7 @@
 <!-- built files will be auto injected -->
 
 <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.js"></script>
+<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
 <script>
     $(function () {
         $("#action-config").click(function () {
@@ -80,20 +85,8 @@
             })
         })
 
-        $("#action-more-config-jq").click(function(){
-            $.ajax({
-                url: '//gw.lenovo.com.cn/service/gateway/wechatJsConf',
-                type: 'post',
-                contentType: 'application/x-www-form-urlencoded',
-                data: {url: location.href},
-                success: function (wxJson) {
-                    console.log(wxJson)
-                }
-            })
-        })
-
         $("#action-get-openid").click(function(){
-            let openid = nov.getOpenId()
+            let openid = nov.getOpenid()
             if (openid) {
                 weui.alert('the openid is ' + openid)
             }

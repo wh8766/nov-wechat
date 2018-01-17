@@ -1,6 +1,6 @@
-import cookie from 'browser-cookie'
+import Cookie from 'browser-cookie'
 
-import {getUrlParam, isWeiXin, singleLoad} from "./common/tool";
+import {getUrlParam, isIPhone, isWeiXin, singleLoad} from "./common/tool";
 import {getJssdkConfig} from "./api";
 
 const config = {
@@ -10,7 +10,19 @@ const config = {
 
 const LOADED = 'LOADED'
 
-let scriptLoad = null
+let scriptLoad = null, cookie = new Cookie()
+
+let pageLoad = new Promise(function(resolve, reject) {
+    //fix Safari font cache bug
+    //https://segmentfault.com/q/1010000007319171/a-1020000007347261
+    if (isIPhone()) {
+        window.addEventListener('load', function() {
+            resolve(LOADED)
+        })
+    } else {
+        resolve('OK')
+    }
+})
 
 function setConfig({jsApiList, debugFlag}) {
     if (!scriptLoad) {
@@ -54,19 +66,17 @@ function setConfig({jsApiList, debugFlag}) {
 /**
  * 设置微信分享
  * 在单页项目，当路由发生变化时，需要更新微信分享设置
- * @example
- * 对于SPA 项目，初始的入口必须是 example.com/#/ 才能当router 发生改变时正确设置JSSDK
  * @param title
  * @param image
  * @param description
  * @param link
- * @param jsApiList
+ * @returns {Promise}
  */
 export const initWechatShare = function ({title, image, description, link}) {
     return initWechatJSSDK({jsApiList: config.jsApiList}).then(wx => {
         let cfg = {
             title: title,
-            desc: description,
+            desc: description || '',
             link: link || location.href,
             imgUrl: image || config.defaultImage,
         }
@@ -75,6 +85,12 @@ export const initWechatShare = function ({title, image, description, link}) {
     })
 }
 
+/**
+ * 设置指定的微信 JSSDK 权限
+ * @param jsApiList
+ * @param debugFlag
+ * @returns {Promise}
+ */
 export const initWechatJSSDK = function({jsApiList = config.jsApiList, debugFlag = false}) {
     if (!isWeiXin()) {
         return Promise.reject('not wechat')
@@ -85,11 +101,12 @@ export const initWechatJSSDK = function({jsApiList = config.jsApiList, debugFlag
 
 /**
  * 如果是在微信环境下，分别从URL里or cookie 里尝试获取openid
+ * 需要注意的是，正在执行location jump 时，此刻返回的openid = null 需要在代码里判断openid 的可用性
  * @param isSilence 静默授权，默认true
  * @param iframeReg
- * @returns {*}
+ * @returns {String}
  */
-export const getOpenid = function({isSilence = true, iframeReg = /.lenovo.com.cn/}) {
+export const getOpenid = function(isSilence = true, iframeReg = /.lenovo.com.cn/) {
     let href = window.location.href
     if (!/.lenovo.com.cn/.test(href)) {
         console.error('[nov-wechat] 网关不支持除 lenovo.com.cn 以外的域名授权。')
@@ -114,10 +131,11 @@ export const getOpenid = function({isSilence = true, iframeReg = /.lenovo.com.cn
         if (!isSilence) {
             jumpUrl = 'http://weixin.lenovo.com.cn/service/gateway/NonsilentAuth?url='
         }
-        window.onload = function() {
+
+        pageLoad.then(() => {
             window.location.href = jumpUrl + href;
-        }
-        return 'JUMPING'
+        })
+        return null
     }
 
     return openid || cOpenid

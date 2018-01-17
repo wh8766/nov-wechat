@@ -17,12 +17,21 @@ export function singleLoad(source) {
     })
 }
 
+const ua = window.navigator.userAgent.toLowerCase()
 /**
  * 是否为微信环境
  * @returns {boolean}
  */
 export function isWeiXin() {
-    return window.navigator.userAgent.includes('MicroMessenger')
+    return ua.includes('micromessenger')
+}
+
+/**
+ * 是否为iPhone
+ * @returns {boolean}
+ */
+export function isIPhone() {
+    /iphone os/.test(ua)
 }
 
 /**
