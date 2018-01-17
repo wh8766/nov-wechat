@@ -20,6 +20,6 @@ export function getJssdkConfig(customApi = '//gw.lenovo.com.cn/service/gateway/w
         xhr.setRequestHeader("Accept", "*/*");
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-        xhr.send('url=' + encodeURIComponent(window.location.origin + window.location.pathname));
+        xhr.send('url=' + encodeURIComponent(window.location.href.split('#')[0]));
     })
 }
