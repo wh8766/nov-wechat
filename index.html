@@ -16,22 +16,39 @@
     </style>
     <!-- 新 Bootstrap 核心 CSS 文件 -->
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="//res.wx.qq.com/open/libs/weui/1.1.2/weui.min.css">
+    <script type="text/javascript" src="//res.wx.qq.com/open/libs/weuijs/1.1.3/weui.min.js"></script>
 </head>
 <body>
 <div class="container">
     <div class="well">请在微信浏览器或微信开发者工具下打开</div>
     <div class="panel panel-primary">
-    	<div class="panel-heading">测试区域</div>
+    	<div class="panel-heading">设置JSSDK相关方法</div>
     	<div class="panel-body">
-            <button class="btn btn-danger" id="action-config">initWechatShare</button>
-            <button class="btn btn-danger" id="action-update">updateWechatShare</button>
+            <p>
+                <button class="btn btn-danger" id="action-config">initWechatShare</button>
+                <button class="btn btn-danger" id="action-update">updateWechatShare</button>
+            </p>
+            <p>
+                <button class="btn btn-danger" id="action-more-config">choose image</button>
+                <button class="btn btn-danger" id="action-more-config-jq">choose image by jq</button>
+            </p>
     	</div>
     </div>
+
+    <div class="panel panel-danger">
+    	<div class="panel-heading">获取openid</div>
+    	<div class="panel-body">
+            <button class="btn btn-danger" id="action-get-openid">获取openid</button>
+    	</div>
+    </div>
+
 </div>
 <!-- built files will be auto injected -->
 
 <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.js"></script>
 <script>
     $(function () {
         $("#action-config").click(function () {
@@ -44,6 +61,42 @@
             nov.initWechatShare({
                 title: '分享的题目 更新'
             })
+        })
+
+        $("#action-more-config").click(function(){
+            nov.initWechatJSSDK({
+                jsApiList: ['chooseImage']
+            }).then(wx => {
+                wx.chooseImage({
+                    count: 1, // 默认9
+                    sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                    sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                    success: function (res) {
+                        var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                    }
+                });
+            }).catch(function(error) {
+            	console.log(error)
+            })
+        })
+
+        $("#action-more-config-jq").click(function(){
+            $.ajax({
+                url: '//gw.lenovo.com.cn/service/gateway/wechatJsConf',
+                type: 'post',
+                contentType: 'application/x-www-form-urlencoded',
+                data: {url: location.href},
+                success: function (wxJson) {
+                    console.log(wxJson)
+                }
+            })
+        })
+
+        $("#action-get-openid").click(function(){
+            let openid = nov.getOpenId()
+            if (openid) {
+                weui.alert('the openid is ' + openid)
+            }
         })
     })
 </script>
