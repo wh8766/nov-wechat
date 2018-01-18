@@ -17,8 +17,6 @@ npm run dev
 npm run build
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
-
 ## How to use
 
 ### Install
@@ -40,6 +38,13 @@ initWechatShare({
 let openid = nov.getOpenid()
 if (openid) {
     // do something ...
+}
+// 针对SPA 项目
+let hash = sessionStorage.getItem('nov-url-hash')
+if (hash) {
+    // 以Vue router 举栗子 push `/user/222`
+    this.$router.push(hash.substr(1))
+    sessionStorage.removeItem('nov-url-hash')
 }
 ```
 
@@ -82,9 +87,11 @@ if (openid) {
 
 需要注意的是，正在执行location jump 时，此刻返回的openid = null 需要在代码里判断openid 的可用性
 
+在跳离页面前，会将`location.hash` 存入 `SessionStorage`，key 等于 `nov-url-hash`
+
 ## 其他需要注意的地方
 
-- 不能在iframe 引用的页面中获取openid
+- 如果项目页面被iframe 引用，获取openid 时会导致页面白屏
 - 网关是否支持带hash 的跳转，不支持情况下需要做处理，避免前端路由失效
 - 避免iOS 页面未加载完全时的跳转，会造成iconfont 失效
 - 目前网关只支持*.lenovo.com.cn 需要检测并给提示
