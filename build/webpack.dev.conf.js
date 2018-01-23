@@ -1,5 +1,4 @@
 'use strict'
-const utils = require('./utils')
 const webpack = require('webpack')
 const config = require('../config')
 const merge = require('webpack-merge')
@@ -72,10 +71,7 @@ module.exports = new Promise((resolve, reject) => {
             devWebpackConfig.plugins.push(new FriendlyErrorsPlugin({
                 compilationSuccessInfo: {
                     messages: [`Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`],
-                },
-                onErrors: config.dev.notifyOnErrors
-                    ? utils.createNotifierCallback()
-                    : undefined
+                }
             }))
 
             resolve(devWebpackConfig)

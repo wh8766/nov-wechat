@@ -2,6 +2,7 @@ import Cookie from 'browser-cookie'
 
 import {getUrlParam, isIPhone, isWeiXin, singleLoad} from "./common/tool";
 import {getJssdkConfig} from "./api";
+import {decode} from "./common/base64";
 
 const config = {
     jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareQZone', 'onMenuShareWeibo'],
@@ -100,45 +101,60 @@ export const initWechatJSSDK = function({jsApiList = config.jsApiList, debugFlag
 }
 
 /**
- * 如果是在微信环境下，分别从URL里or cookie 里尝试获取openid
- * 需要注意的是，正在执行location jump 时，此刻返回的openid = null 需要在代码里判断openid 的可用性
- * @param isSilence 静默授权，默认true
- * @param iframeReg
- * @returns {String}
+ * 授权并获取内容，静默仅获取openid，非静默下获取userInfo
+ * @param isSilence
  */
-export const getOpenid = function(isSilence = true, iframeReg = /.lenovo.com.cn/) {
+function auth(isSilence = true) {
     let href = window.location.href
     if (!/.lenovo.com.cn/.test(href)) {
         console.error('[nov-wechat] 网关不支持除 lenovo.com.cn 以外的域名授权。')
+    } else if (isWeiXin()) {
+        console.warn('[nov-wechat] 需要在微信下打开窗口')
     }
 
-    // 在非指定域名下的页面，就不去获取openid 了
-    // 否则会导致iframe 页面跳转
-    let referee = document.referrer || href
-    if (!iframeReg.test(referee)) {
-        console.warn('[nov-wechat] 在非指定域名下的页面不再获取openid，如iframe 内打开本页面。')
-        return 'iframe-no-openid'
+    let jumpUrl = ''
+
+    let openid = cookie.get('openid') || getUrlParam('openid')
+    if (openid && isSilence) {
+        return openid
+    } else if (isSilence) {
+        jumpUrl = 'http://weixin.lenovo.com.cn/service/gateway/AutoAuthorize?url='
     }
 
-    let openid = getUrlParam('openid')
-    //从cookie中获取 openid
-    let cOpenid = cookie.get('openid')
+    let user = cookie.get('wxuser'), userInfo = null
+    if (user) {
+        userInfo = decode(user)
+    } else if (!isSilence) {
+        jumpUrl = 'http://weixin.lenovo.com.cn/service/gateway/NonsilentAuth?url='
+    }
 
-    //微信auth 认证过程中，只能额外附加一个参数
-    if (!cOpenid && !openid && isWeiXin()) {
-        sessionStorage.setItem('nov-url-hash', window.location.hash)
-        let jumpUrl = 'http://weixin.lenovo.com.cn/service/gateway/AutoAuthorize?url='
-        if (!isSilence) {
-            jumpUrl = 'http://weixin.lenovo.com.cn/service/gateway/NonsilentAuth?url='
-        }
-
+    if (jumpUrl) {
         pageLoad.then(() => {
+            sessionStorage.setItem('nov-url-hash', window.location.hash)
             window.location.href = jumpUrl + href;
         })
         return null
     }
 
-    return openid || cOpenid
+    return isSilence ? openid : userInfo
+}
+
+/**
+ * 静默授权，分别从URL里or cookie 里尝试获取openid
+ * 需要注意的是，正在执行location jump 时，此刻返回值可能为null，需要在代码里判断返回值的可用性
+ * @returns {String}
+ */
+export const getOpenid = function() {
+    return auth(true)
+}
+
+/**
+ * 非静默授权，用于获取用户基本信息（即便是未关注的用户）
+ * 需要注意的是，正在执行location jump 时，此刻返回值可能为null，需要在代码里判断返回值的可用性
+ * @returns {Object}
+ */
+export const getUserInfo = function() {
+    return auth(false)
 }
 
 /**

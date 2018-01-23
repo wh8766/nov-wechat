@@ -39,6 +39,12 @@ let openid = nov.getOpenid()
 if (openid) {
     // do something ...
 }
+
+let userInfo = nov.getUserInfo()
+if(userInfo) {
+    console.log('nickname is:' + userInfo.nickname)
+    // do something ...
+}
 // 针对SPA 项目
 let hash = sessionStorage.getItem('nov-url-hash')
 if (hash) {
@@ -60,39 +66,69 @@ var openid = nov.getOpenid()
 if (openid) {
     // do something ...
 }
+
+var userInfo = nov.getUserInfo()
+if(userInfo) {
+    console.log('nickname is:' + userInfo.nickname)
+    // do something ...
+}
 </script>
 ```
 
-### API
+## API
 
-`initWechatShare` `initWechatJSSDK` 均做了Promise 处理，除了必要的请求，无需担心重复加载微信SDK脚本问题
+`initWechatShare` `initWechatJSSDK` 均做了Promise 处理，除了必要的请求，无需担心重复加载微信SDK脚本问题。
 
-#### initWechatShare
+### initWechatShare
 
-> Promise initWechatShare function ({title, image, description, link})
+    Promise initWechatShare function ({title, image, description, link})
 
 设置微信分享，在单页项目，当路由发生变化时，需要更新微信分享设置
 
-#### initWechatJSSDK
+### initWechatJSSDK
 
-> Promise initWechatJSSDK function({jsApiList = config.jsApiList, debugFlag = false})
+    Promise initWechatJSSDK function({jsApiList = config.jsApiList, debugFlag = false})
 
 设置指定的微信 JSSDK 权限
 
-#### getOpenid
+### getOpenid
 
-> String getOpenid function(isSilence = true, iframeReg = /.lenovo.com.cn/)
+    String getOpenid function()
 
 如果是在微信环境下，分别从URL里or cookie 里尝试获取openid。
 
-需要注意的是，正在执行location jump 时，此刻返回的openid = null 需要在代码里判断openid 的可用性
+需要注意的是，正在执行location jump 时，此刻返回值可能为null，需要在代码里判断返回值的可用性
 
 在跳离页面前，会将`location.hash` 存入 `SessionStorage`，key 等于 `nov-url-hash`
+
+### getUserInfo
+
+    Object getUserInfo function()
+
+需要注意的是，正在执行location jump 时，此刻返回值可能为null，需要在代码里判断返回值的可用性
+
+在跳离页面前，会将`location.hash` 存入 `SessionStorage`，key 等于 `nov-url-hash`
+
+响应数据如下：
+
+```json
+{
+    "city": "朝阳",
+    "province": "北京",
+    "sex": 1,
+    "openid": "oLHCTjvtz056e3h8Qj-xxxxxx",
+    "privilege": [],
+    "country": "中国",
+    "unionid": "oo6-IuNNZNK148L3TL9xxxxxxx",
+    "headimgurl": "http://wx.qlogo.cn/mmopen/vi_32/xxxx/132",
+    "nickname": "xxxx",
+    "language": "zh_CN"
+}
+```
 
 ## 其他需要注意的地方
 
 - 如果项目页面被iframe 引用，获取openid 时会导致页面白屏
-- 网关是否支持带hash 的跳转，不支持情况下需要做处理，避免前端路由失效
-- 避免iOS 页面未加载完全时的跳转，会造成iconfont 失效
+- 网关不支持带hash 的跳转，SPA下需要做处理，避免前端路由失效
 - 目前网关只支持*.lenovo.com.cn 需要检测并给提示
-- 默认是静默授权，但也需要给出非静默授权的config option
+- 已经添加针对iOS 下页面未加载完全时的跳转，会造成iconfont 失效的处理

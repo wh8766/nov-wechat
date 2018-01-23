@@ -41,11 +41,20 @@
     </div>
 
     <div class="panel panel-danger">
-    	<div class="panel-heading">获取openid</div>
+    	<div class="panel-heading">获取openid 或者用户信息</div>
     	<div class="panel-body">
-            <p>需要注意的是，正在执行location jump 时，此刻返回的openid = null 需要在代码里判断openid 的可用性</p>
+            <p>需要注意的是，正在执行location jump 时，此刻返回值可能为null，需要在代码里判断openid 的可用性</p>
             <p>在这个过程中网关会丢失hash 内容，所以我们将hash 存放在 SessionStorage 里 key = <code>nov-url-hash</code></p>
-            <button class="btn btn-danger" id="action-get-openid">获取openid</button>
+
+            <h3>getOpenid</h3>
+            <p>
+                <button class="btn btn-danger" id="action-get-openid">获取openid（静默授权）</button>
+            </p>
+
+            <h3>getUserInfo</h3>
+            <p>
+                <button class="btn btn-danger" id="action-get-openid-no-silence">获取userInfo（非静默授权）</button>
+            </p>
     	</div>
     </div>
 
@@ -89,6 +98,14 @@
             let openid = nov.getOpenid()
             if (openid) {
                 weui.alert('the openid is ' + openid)
+            }
+        })
+
+        $("#action-get-openid-no-silence").click(function(){
+            let userInfo = nov.getUserInfo()
+            if (userInfo) {
+                weui.alert('the userInfo is ' + JSON.stringify(userInfo))
+                console.log(userInfo)
             }
         })
     })
