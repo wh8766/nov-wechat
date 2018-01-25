@@ -128,13 +128,13 @@ function auth(isSilence = true) {
         jumpUrl.push('NonsilentAuth?url='+href)
     }
 
-    if (jumpUrl) {
+    if (jumpUrl.length > 1) {
         if (dmp) {
-            location.search ? jumpUrl.push('&dmp=1') : jumpUrl.push('?dmp=1')
+            location.search ? jumpUrl.push(location.search + '&dmp=1') : jumpUrl.push('?dmp=1')
         }
         pageLoad.then(() => {
             sessionStorage.setItem('nov-url-hash', window.location.hash)
-            console.log(dmp, jumpUrl, jumpUrl.join(''))
+            // console.log(dmp, jumpUrl, jumpUrl.join(''))
             window.location.href = jumpUrl.join('')
         })
         return null
