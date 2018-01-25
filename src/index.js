@@ -130,7 +130,7 @@ function auth(isSilence = true) {
 
     if (jumpUrl.length > 1) {
         if (dmp) {
-            location.search ? jumpUrl.push(location.search + '&dmp=1') : jumpUrl.push('?dmp=1')
+            window.location.search ? jumpUrl.push(window.location.search + '&dmp=1') : jumpUrl.push('?dmp=1')
         }
         pageLoad.then(() => {
             sessionStorage.setItem('nov-url-hash', window.location.hash)
