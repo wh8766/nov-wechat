@@ -56,6 +56,9 @@
                 <button class="btn btn-danger" id="action-get-openid-no-silence">获取userInfo（非静默授权）</button>
             </p>
     	</div>
+        <div class="panel-footer">
+            <button class="btn btn-info" id="action-set-dmp">设置DMP cookie</button>
+        </div>
     </div>
 
 </div>
@@ -107,6 +110,11 @@
                 weui.alert('the userInfo is ' + JSON.stringify(userInfo))
                 console.log(userInfo)
             }
+        })
+
+        $("#action-set-dmp").click(function(){
+            nov.setDmp(true)
+            weui.topTips('设置完成 dmp = true')
         })
     })
 </script>

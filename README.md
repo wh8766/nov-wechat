@@ -23,7 +23,7 @@ npm run build
 
 方式1：npm install
 ```shell
-cnpm install nov-wechat 
+npm install nov-wechat 
 ```
 
 ```javascript
@@ -125,6 +125,12 @@ if(userInfo) {
     "language": "zh_CN"
 }
 ```
+
+### setDmp
+
+    Void setDmp function(Boolean dmpStatus)
+    
+让网关在Auth 认证过程中增加dmp 需要的cookie，在调用`getOpenid` `getUserInfo` 之前使用。
 
 ## 其他需要注意的地方
 

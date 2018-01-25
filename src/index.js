@@ -11,7 +11,7 @@ const config = {
 
 const LOADED = 'LOADED'
 
-let scriptLoad = null, cookie = new Cookie()
+let scriptLoad = null, cookie = new Cookie(), dmp = false
 
 let pageLoad = new Promise(function(resolve, reject) {
     //fix Safari font cache bug
@@ -105,33 +105,37 @@ export const initWechatJSSDK = function({jsApiList = config.jsApiList, debugFlag
  * @param isSilence
  */
 function auth(isSilence = true) {
-    let href = window.location.href
+    let href = window.location.origin + window.location.pathname
     if (!/.lenovo.com.cn/.test(href)) {
         console.error('[nov-wechat] 网关不支持除 lenovo.com.cn 以外的域名授权。')
-    } else if (isWeiXin()) {
+    } else if (!isWeiXin()) {
         console.warn('[nov-wechat] 需要在微信下打开窗口')
     }
 
-    let jumpUrl = ''
+    let jumpUrl = ['http://weixin.lenovo.com.cn/service/gateway/']
 
     let openid = cookie.get('openid') || getUrlParam('openid')
     if (openid && isSilence) {
         return openid
     } else if (isSilence) {
-        jumpUrl = 'http://weixin.lenovo.com.cn/service/gateway/AutoAuthorize?url='
+        jumpUrl.push('AutoAuthorize?url='+href)
     }
 
     let user = cookie.get('wxuser'), userInfo = null
     if (user) {
         userInfo = decode(user)
     } else if (!isSilence) {
-        jumpUrl = 'http://weixin.lenovo.com.cn/service/gateway/NonsilentAuth?url='
+        jumpUrl.push('NonsilentAuth?url='+href)
     }
 
     if (jumpUrl) {
+        if (dmp) {
+            location.search ? jumpUrl.push('&dmp=1') : jumpUrl.push('?dmp=1')
+        }
         pageLoad.then(() => {
             sessionStorage.setItem('nov-url-hash', window.location.hash)
-            window.location.href = jumpUrl + href;
+            console.log(dmp, jumpUrl, jumpUrl.join(''))
+            window.location.href = jumpUrl.join('')
         })
         return null
     }
@@ -162,3 +166,11 @@ export const getUserInfo = function() {
  * @type {boolean}
  */
 export const isWeixin = isWeiXin()
+
+/**
+ * 是否启用DMP cookie 默认为false
+ * @param dmpStatus
+ */
+export const setDmp = function(dmpStatus) {
+	dmp = dmpStatus
+}
