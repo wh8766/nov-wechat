@@ -1,9 +1,10 @@
+const customApi = '//gw.lenovo.com.cn/service/gateway/wechatJsConf'
+
 /**
  * 获取微信JSSDK签名
- * @param customApi
  * @returns {Promise}
  */
-export function getJssdkConfig(customApi = '//gw.lenovo.com.cn/service/gateway/wechatJsConf') {
+export function getJssdkConfig() {
     return new Promise(function(resolve, reject) {
         let xhr = new XMLHttpRequest();
 

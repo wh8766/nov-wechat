@@ -81,15 +81,31 @@ if(userInfo) {
 
 ### initWechatShare
 
-    Promise initWechatShare function ({title, image, description, link})
+    Promise<wx> initWechatShare function ({title, image, description, link})
 
-设置微信分享，在单页项目，当路由发生变化时，需要更新微信分享设置
+设置微信分享
+同一个url仅需调用一次，对于变化url的SPA的web app可在每次url变化时进行调用。
 
 ### initWechatJSSDK
 
-    Promise initWechatJSSDK function({jsApiList = config.jsApiList, debugFlag = false})
+    Promise<wx> initWechatJSSDK function({jsApiList = config.jsApiList, debugFlag = false})
 
-设置指定的微信 JSSDK 权限
+设置指定的微信 JSSDK 权限，Promise resolve 时，相当于`wx.ready`。
+
+同一个url仅需调用一次，对于变化url的SPA的web app可在每次url变化时进行调用。
+更多信息请参考微信JSSDK文档：https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141115
+
+```javascript
+nov.initWechatJSSDK({
+    jsApiList: ['chooseImage']
+}).then(wx => {
+    wx.chooseImage({
+        // do something ...
+    });
+}).catch(function(error) {
+    // handle error ...
+})
+```
 
 ### getOpenid
 
@@ -97,7 +113,7 @@ if(userInfo) {
 
 如果是在微信环境下，分别从URL里or cookie 里尝试获取openid。
 
-需要注意的是，正在执行location jump 时，此刻返回值可能为null，需要在代码里判断返回值的可用性
+需要注意的是，正在执行location jump 时，此刻返回值可能为null，需要在代码里判断返回值的可用性。
 
 在跳离页面前，会将`location.hash` 存入 `SessionStorage`，key 等于 `nov-url-hash`
 
@@ -105,7 +121,7 @@ if(userInfo) {
 
     Object getUserInfo function()
 
-需要注意的是，正在执行location jump 时，此刻返回值可能为null，需要在代码里判断返回值的可用性
+需要注意的是，正在执行location jump 时，此刻返回值可能为null，需要在代码里判断返回值的可用性。
 
 在跳离页面前，会将`location.hash` 存入 `SessionStorage`，key 等于 `nov-url-hash`
 
