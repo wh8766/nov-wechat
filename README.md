@@ -56,7 +56,7 @@ if (hash) {
 
 方式2：script 引入
 ```html
-<script src="http://driverdl.lenovo.com.cn/FE/static/js/nov.min.js"></script>
+<script src="https://unpkg.com/nov-wechat@latest/lib/nov.min.js"></script>
 <script>
 nov.initWechatShare({
     title: '分享的题目'
