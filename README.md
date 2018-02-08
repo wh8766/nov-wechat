@@ -111,7 +111,7 @@ nov.initWechatJSSDK({
 
     String getOpenid function()
 
-如果是在微信环境下，分别从URL里or cookie 里尝试获取openid。
+如果是在微信环境下，静默授权，分别从URL里or cookie 里尝试获取openid。
 
 需要注意的是，正在执行location jump 时，此刻返回值可能为null，需要在代码里判断返回值的可用性。
 
@@ -120,6 +120,8 @@ nov.initWechatJSSDK({
 ### getUserInfo
 
     Object getUserInfo function()
+
+非静默授权，用于获取用户基本信息（即便是未关注的用户）。
 
 需要注意的是，正在执行location jump 时，此刻返回值可能为null，需要在代码里判断返回值的可用性。
 
