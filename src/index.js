@@ -5,7 +5,7 @@ import {getJssdkConfig} from "./api";
 import {decode} from "./common/base64";
 
 const config = {
-    jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage', 'onMenuShareQQ', 'onMenuShareQZone', 'onMenuShareWeibo'],
+    jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'],
     defaultImage: 'http://driverdl.lenovo.com.cn/FE/static/image/lenovo-share.jpg'
 }
 
@@ -67,35 +67,29 @@ function setConfig({jsApiList, debugFlag}) {
 /**
  * 设置微信分享
  * 在单页项目，当路由发生变化时，需要更新微信分享设置
- * @param title 标题
- * @param image 分享图片
- * @param description 兼容旧版参数，描述
- * @param desc 分享描述
- * @param link 分享链接
- * @param type 分享类型,music、video或link，不填默认为link
- * @param dataUrl 如果type是music或video，则要提供数据链接，默认为空
- * @returns {Promise<String>}
+ * @param options
+ * <ul>
+ *  <li>title 标题</li>
+ *  <li>imgUrl 分享图片（旧版参数：image）</li>
+ *  <li>desc 分享描述（旧版参数：description）</li>
+ *  <li>link 分享链接</li>
+ *  <li>type 分享类型,music、video或link，不填默认为link</li>
+ *  <li>dataUrl 如果type是music或video，则要提供数据链接，默认为空</li>
+ *  <li>success</li>
+ *  <li>cancel</li>
+ * </ul>
+ * @returns {Promise<Object>}
  */
-export const initWechatShare = function ({title, image, description, desc, link, type, dataUrl}) {
+export const initWechatShare = function (options) {
     return initWechatJSSDK({jsApiList: config.jsApiList}).then(wx => {
-        return new Promise((resolve, reject) => {
-            let cfg = {
-                title: title,
-                desc: description || desc || '',
-                link: link || location.href,
-                imgUrl: image || config.defaultImage,
-                type: type || '',
-                dataUrl: dataUrl || '',
-                success() {
-                    resolve('success')
-                },
-                cancel() {
-                    resolve('cancel')
-                }
-            }
-            wx.onMenuShareTimeline(cfg);
-            wx.onMenuShareAppMessage(cfg);
-        })
+        let cfg = {
+            desc: options.description,
+            link: location.href,
+            imgUrl: options.image || config.defaultImage,
+            ...options
+        }
+        wx.onMenuShareTimeline(cfg);
+        wx.onMenuShareAppMessage(cfg);
     })
 }
 

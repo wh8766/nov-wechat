@@ -27,21 +27,30 @@ npm install nov-wechat
 ```
 
 ```javascript
-import {initWechatShare, getOpenid} from 'nov-wechat'
+import {initWechatShare, getUserInfo, getOpenid} from 'nov-wechat'
 
 initWechatShare({
-    title: '分享的题目'
+    title: '嘿，这里是标题',
+    desc: '狗年吉祥！',
+    link: 'vs.lenovo.com.cn',
+    success: function() {
+        console.log('用户确认分享后执行的回调函数')
+    },
+    cancel: function() {
+        console.log('用户取消分享后执行的回调函数')
+    }
 })
 
 // ....
 
-let openid = nov.getOpenid()
+let openid = getOpenid()
 if (openid) {
     // do something ...
 }
 
-let userInfo = nov.getUserInfo()
-if(userInfo) {
+let userInfoStr = getUserInfo()
+if(userInfoStr) {
+    let userInfo = JSON.parse(userInfoStr)
     console.log('nickname is:' + userInfo.nickname)
     // do something ...
 }
@@ -67,8 +76,9 @@ if (openid) {
     // do something ...
 }
 
-var userInfo = nov.getUserInfo()
-if(userInfo) {
+var userInfoStr = nov.getUserInfo()
+if(userInfoStr) {
+    var userInfo = JSON.parse(userInfoStr)
     console.log('nickname is:' + userInfo.nickname)
     // do something ...
 }
@@ -81,21 +91,33 @@ if(userInfo) {
 
 ### initWechatShare
 
-    Promise<String shareState> initWechatShare function ({title, image, description, link})
+    Promise<Object wx> initWechatShare function (options)
+    
+options 参数内容
+- title 标题
+- imgUrl 分享图片（旧版参数：image）
+- desc 分享描述（旧版参数：description）
+- link 分享链接
+- type 分享类型,music、video或link，不填默认为link
+- dataUrl 如果type是music或video，则要提供数据链接，默认为空
+- success 分享成功回调
+- cancel 取消分享回调
 
-设置微信分享，Promise resolve 时，相当于用户分享成功（shareState = success）或者取消（shareState = cancel）。
+设置微信分享，为方便使用做的封装，仅注册了微信JSSDK的`onMenuShareTimeline` `onMenuShareAppMessage` 两个权限。
+如果需要更多分享能力，请使用`initWechatJSSDK` 得到`wx` 对象后自行处理。
 
 同一个url仅需调用一次，对于变化url的SPA的web app可在每次url变化时进行调用。
 
 ```javascript
 initWechatShare({
     title: '嘿，这里是标题',
-    desc: '狗年吉祥！'
-}).then(re => {
-    if (re === 'success') {
-        // 用户确认分享后执行的回调函数
-    } else {
-        // 用户取消分享后执行的回调函数 re = cancel
+    desc: '狗年吉祥！',
+    link: 'vs.lenovo.com.cn',
+    success: function() {
+        console.log('用户确认分享后执行的回调函数')
+    },
+    cancel: function() {
+        console.log('用户取消分享后执行的回调函数')
     }
 })
 ```
@@ -110,7 +132,7 @@ initWechatShare({
 更多信息请参考微信JSSDK文档：https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141115
 
 ```javascript
-nov.initWechatJSSDK({
+initWechatJSSDK({
     jsApiList: ['chooseImage']
 }).then(wx => {
     wx.chooseImage({
@@ -170,3 +192,13 @@ nov.initWechatJSSDK({
 - 网关不支持带hash 的跳转，SPA下需要做处理，避免前端路由失效
 - 目前网关只支持*.lenovo.com.cn 需要检测并给提示
 - 已经添加针对iOS 下页面未加载完全时的跳转，会造成iconfont 失效的处理
+
+## 在线测试
+
+由于需要工作在lenovo.com.cn 域名下，请配置host
+
+    115.28.154.221			ayouvi.lenovo.com.cn
+
+配置后访问进行测试：
+
+http://ayouvi.lenovo.com.cn/dev-pages/nov-wechat-example.html
