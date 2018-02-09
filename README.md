@@ -81,14 +81,28 @@ if(userInfo) {
 
 ### initWechatShare
 
-    Promise<wx> initWechatShare function ({title, image, description, link})
+    Promise<String shareState> initWechatShare function ({title, image, description, link})
 
-设置微信分享
+设置微信分享，Promise resolve 时，相当于用户分享成功（shareState = success）或者取消（shareState = cancel）。
+
 同一个url仅需调用一次，对于变化url的SPA的web app可在每次url变化时进行调用。
+
+```javascript
+initWechatShare({
+    title: '嘿，这里是标题',
+    desc: '狗年吉祥！'
+}).then(re => {
+    if (re === 'success') {
+        // 用户确认分享后执行的回调函数
+    } else {
+        // 用户取消分享后执行的回调函数 re = cancel
+    }
+})
+```
 
 ### initWechatJSSDK
 
-    Promise<wx> initWechatJSSDK function({jsApiList = config.jsApiList, debugFlag = false})
+    Promise<Object wx> initWechatJSSDK function({jsApiList = config.jsApiList, debugFlag = false})
 
 设置指定的微信 JSSDK 权限，Promise resolve 时，相当于`wx.ready`。
 
@@ -113,17 +127,17 @@ nov.initWechatJSSDK({
 
 如果是在微信环境下，静默授权，分别从URL里or cookie 里尝试获取openid。
 
-需要注意的是，正在执行location jump 时，此刻返回值可能为null，需要在代码里判断返回值的可用性。
+需要注意的是，用户首次Auth 会发生页面跳转，此刻返回值可能为null，需要在代码里判断返回值的可用性。
 
 在跳离页面前，会将`location.hash` 存入 `SessionStorage`，key 等于 `nov-url-hash`
 
 ### getUserInfo
 
-    Object getUserInfo function()
+    String getUserInfo function()
 
 非静默授权，用于获取用户基本信息（即便是未关注的用户）。
 
-需要注意的是，正在执行location jump 时，此刻返回值可能为null，需要在代码里判断返回值的可用性。
+需要注意的是，用户首次Auth 会发生页面跳转，此刻返回值可能为null，需要在代码里判断返回值的可用性。
 
 在跳离页面前，会将`location.hash` 存入 `SessionStorage`，key 等于 `nov-url-hash`
 

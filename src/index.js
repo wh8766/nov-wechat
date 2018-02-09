@@ -67,22 +67,35 @@ function setConfig({jsApiList, debugFlag}) {
 /**
  * 设置微信分享
  * 在单页项目，当路由发生变化时，需要更新微信分享设置
- * @param title
- * @param image
- * @param description
- * @param link
- * @returns {Promise}
+ * @param title 标题
+ * @param image 分享图片
+ * @param description 兼容旧版参数，描述
+ * @param desc 分享描述
+ * @param link 分享链接
+ * @param type 分享类型,music、video或link，不填默认为link
+ * @param dataUrl 如果type是music或video，则要提供数据链接，默认为空
+ * @returns {Promise<String>}
  */
-export const initWechatShare = function ({title, image, description, link}) {
+export const initWechatShare = function ({title, image, description, desc, link, type, dataUrl}) {
     return initWechatJSSDK({jsApiList: config.jsApiList}).then(wx => {
-        let cfg = {
-            title: title,
-            desc: description || '',
-            link: link || location.href,
-            imgUrl: image || config.defaultImage,
-        }
-        wx.onMenuShareTimeline(cfg);
-        wx.onMenuShareAppMessage(cfg);
+        return new Promise((resolve, reject) => {
+            let cfg = {
+                title: title,
+                desc: description || desc || '',
+                link: link || location.href,
+                imgUrl: image || config.defaultImage,
+                type: type || '',
+                dataUrl: dataUrl || '',
+                success() {
+                    resolve('success')
+                },
+                cancel() {
+                    resolve('cancel')
+                }
+            }
+            wx.onMenuShareTimeline(cfg);
+            wx.onMenuShareAppMessage(cfg);
+        })
     })
 }
 
@@ -134,7 +147,6 @@ function auth(isSilence = true) {
         }
         pageLoad.then(() => {
             sessionStorage.setItem('nov-url-hash', window.location.hash)
-            // console.log(dmp, jumpUrl, jumpUrl.join(''))
             window.location.href = jumpUrl.join('')
         })
         return null
@@ -155,7 +167,7 @@ export const getOpenid = function() {
 /**
  * 非静默授权，用于获取用户基本信息（即便是未关注的用户）
  * 需要注意的是，正在执行location jump 时，此刻返回值可能为null，需要在代码里判断返回值的可用性
- * @returns {Object}
+ * @returns {String}
  */
 export const getUserInfo = function() {
     return auth(false)

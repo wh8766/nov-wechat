@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>nov-wechat page example</title>
+    <link rel="icon" href="https://m.lenovo.com.cn/favicon.ico"/>
     <style>
         html, body{
             height: 100%;
@@ -70,7 +71,14 @@
     $(function () {
         $("#action-config").click(function () {
             nov.initWechatShare({
-                title: '分享的题目'
+                title: '嘿，这里是标题',
+                desc: '狗年吉祥！'
+            }).then(function(re) {
+                if (re === 'success') {
+                    console.log('用户确认分享后执行的回调函数')
+                } else {
+                    console.log('用户取消分享后执行的回调函数 re = cancel')
+                }
             })
         })
 
@@ -107,8 +115,8 @@
         $("#action-get-openid-no-silence").click(function(){
             let userInfo = nov.getUserInfo()
             if (userInfo) {
-                weui.alert('the userInfo is ' + JSON.stringify(userInfo))
-                console.log(userInfo)
+                weui.alert('the userInfo is ' + userInfo)
+                console.log(JSON.parse(userInfo))
             }
         })
 
