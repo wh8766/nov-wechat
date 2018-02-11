@@ -1,6 +1,4 @@
-import Cookie from 'browser-cookie'
-
-import {getUrlParam, isIPhone, isWeiXin, singleLoad} from "./common/tool";
+import {getCookie, getUrlParam, isIPhone, isWeiXin, singleLoad} from "./common/tool";
 import {getJssdkConfig} from "./api";
 import {decode} from "./common/base64";
 
@@ -11,7 +9,7 @@ const config = {
 
 const LOADED = 'LOADED'
 
-let scriptLoad = null, cookie = new Cookie(), dmp = false
+let scriptLoad = null, dmp = false
 
 let pageLoad = new Promise(function(resolve, reject) {
     //fix Safari font cache bug
@@ -84,12 +82,13 @@ export const initWechatShare = function (options) {
     return initWechatJSSDK({jsApiList: config.jsApiList}).then(wx => {
         let cfg = {
             desc: options.description,
-            link: location.href,
+            link: options.link || location.href,
             imgUrl: options.image || config.defaultImage,
             ...options
         }
         wx.onMenuShareTimeline(cfg);
         wx.onMenuShareAppMessage(cfg);
+        return 'ok'
     })
 }
 
@@ -121,14 +120,14 @@ function auth(isSilence = true) {
 
     let jumpUrl = ['http://weixin.lenovo.com.cn/service/gateway/']
 
-    let openid = cookie.get('openid') || getUrlParam('openid')
+    let openid = getCookie('openid') || getUrlParam('openid')
     if (openid && isSilence) {
         return openid
     } else if (isSilence) {
         jumpUrl.push('AutoAuthorize?url='+href)
     }
 
-    let user = cookie.get('wxuser'), userInfo = null
+    let user = getCookie('wxuser'), userInfo = null
     if (user) {
         userInfo = decode(user)
     } else if (!isSilence) {

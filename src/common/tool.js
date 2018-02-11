@@ -52,4 +52,24 @@ export const getUrlParam = (function() {
     }
 })();
 
-
+/**
+ *  Get a cookie value.
+ *
+ *  @param key The cookie key name.
+ */
+export function getCookie(key) {
+    let i, parts, name, cookie;
+    let result = key ? undefined : '';
+    /* istanbul ignore next */
+    let cookies = (document.cookie || '').split('; ');
+    for (i = 0; i < cookies.length; i++) {
+        parts = cookies[i].split('=');
+        name = parts.shift();
+        cookie = parts.join('=');
+        if (key && key === name) {
+            result = cookie;
+            break;
+        }
+    }
+    return result;
+}

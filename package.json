@@ -1,6 +1,6 @@
 {
     "name": "nov-wechat",
-    "version": "0.0.8",
+    "version": "0.0.9",
     "description": "Lenovo service wechat jssdk.",
     "homepage": "https://github.com/wh8766/nov-wechat",
     "author": "w.hao <wh8766@qq.com>",
@@ -14,7 +14,6 @@
         "build": "node build/build.js"
     },
     "dependencies": {
-        "browser-cookie": "^1.2.1"
     },
     "devDependencies": {
         "babel-core": "^6.22.1",
@@ -43,6 +42,8 @@
         "npm": ">= 3.0.0"
     },
     "keywords": [
+        "nov",
+        "lenovo",
         "nov-plugin"
     ],
     "license": "MIT"
