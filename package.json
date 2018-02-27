@@ -1,6 +1,6 @@
 {
     "name": "nov-wechat",
-    "version": "0.0.9",
+    "version": "0.1.0",
     "description": "Lenovo service wechat jssdk.",
     "homepage": "https://github.com/wh8766/nov-wechat",
     "author": "w.hao <wh8766@qq.com>",
@@ -9,6 +9,7 @@
         "url": "git@github.com:wh8766/nov-wechat.git"
     },
     "main": "src/index.js",
+    "module": "src/index.js",
     "scripts": {
         "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
         "build": "node build/build.js"
