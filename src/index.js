@@ -8,6 +8,7 @@ const config = {
 }
 
 const LOADED = 'LOADED'
+const LOGHEAD = '[nov-wechat]'
 
 let scriptLoad = null, dmp = false
 
@@ -113,25 +114,33 @@ export const initWechatJSSDK = function({jsApiList = config.jsApiList, debugFlag
 function auth(isSilence = true) {
     let href = window.location.origin + window.location.pathname
     if (!/.lenovo.com.cn/.test(href)) {
-        console.error('[nov-wechat] 网关不支持除 lenovo.com.cn 以外的域名授权。')
+        console.error(LOGHEAD, '网关不支持除 lenovo.com.cn 以外的域名授权。')
     } else if (!isWeiXin()) {
-        console.warn('[nov-wechat] 需要在微信下打开窗口')
+        console.warn(LOGHEAD, '需要在微信下打开窗口')
     }
 
     let jumpUrl = ['http://weixin.lenovo.com.cn/service/gateway/']
-
-    let openid = getCookie('openid') || getUrlParam('openid')
-    if (openid && isSilence) {
-        return openid
-    } else if (isSilence) {
-        jumpUrl.push('AutoAuthorize?url='+href)
-    }
 
     let user = getCookie('wxuser'), userInfo = null
     if (user) {
         userInfo = decode(user)
     } else if (!isSilence) {
         jumpUrl.push('NonsilentAuth?url='+href)
+    }
+
+    let openid = getCookie('openid') || getUrlParam('openid')
+    if (!openid && userInfo) {
+        // 如果有完整的info 信息，就从info 里获取openid
+        try {
+            openid = JSON.parse(userInfo).openid
+        } catch (e) {
+            console.error(LOGHEAD, 'JSON parse error', e)
+        }
+    }
+    if (openid && isSilence) {
+        return openid
+    } else if (isSilence) {
+        jumpUrl.push('AutoAuthorize?url='+href)
     }
 
     if (jumpUrl.length > 1) {
