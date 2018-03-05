@@ -36,13 +36,16 @@ function buildPack(webpackConfig, cb, spinnerText) {
 }
 
 buildPack(webpackConfig, function () {
+    webpackConfig.devtool = '#source-map'
     webpackConfig.output.filename = '[name].min.js'
     webpackConfig.output.chunkFilename = '[name].min.js'
     // add UglifyJsPlugin
     webpackConfig.plugins.splice(2, 0, new webpack.optimize.UglifyJsPlugin({
         compress: {
             warnings: false
-        }
+        },
+        sourceMap: true,
+        parallel: true
     }))
     buildPack(webpackConfig, function () {
 

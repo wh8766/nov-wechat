@@ -1,4 +1,4 @@
-import {getCookie, getUrlParam, isIPhone, isWeiXin, singleLoad} from "./common/tool";
+import {_extends, getCookie, getUrlParam, isIPhone, isWeiXin, singleLoad} from "./common/tool";
 import {getJssdkConfig} from "./api";
 import {decode} from "./common/base64";
 
@@ -81,12 +81,11 @@ function setConfig({jsApiList, debugFlag}) {
  */
 export const initWechatShare = function (options) {
     return initWechatJSSDK({jsApiList: config.jsApiList}).then(wx => {
-        let cfg = {
+        let cfg = _extends({
             desc: options.description,
             link: options.link || location.href,
-            imgUrl: options.image || config.defaultImage,
-            ...options
-        }
+            imgUrl: options.image || config.defaultImage
+        }, options)
         wx.onMenuShareTimeline(cfg);
         wx.onMenuShareAppMessage(cfg);
         return 'ok'
