@@ -1,8 +1,9 @@
 sudo: false
 language: node_js
 node_js:
+  - '6'
   - '8'
 install:
-  - npm i npminstall && npminstall
+  - npm i
 script:
   - npm run build
