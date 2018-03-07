@@ -6,15 +6,32 @@
 
 ## Build Setup
 
+项目基于rollup 进行打包，具体请参考：
+- https://rollupjs.org/
+- https://github.com/rollup/rollup-starter-lib
+
 ``` bash
 # install dependencies
 npm install
 
-# serve with hot reload at localhost:8080
+# serve with hot reload at localhost:80
 npm run dev
 
 # build for production with minification
 npm run build
+```
+
+### package entry
+
+为了方便IDE对包的解析，也为了减少打包工具（如webpack）在引入、打包过程中产生的冗余代码，我们在`package.json` 里定义了多个入口。
+这里是参考文档：https://github.com/rollup/rollup/wiki/pkg.module
+
+```
+{
+    "main": "lib/index.cjs.js",
+    "module": "lib/index.es.js",
+    "browser": "lib/nov.min.js"
+}
 ```
 
 ## How to use
