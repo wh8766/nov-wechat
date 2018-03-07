@@ -1,3 +1,4 @@
+//@copyright Lenovo service wechat jssdk, version: 0.2.0
 var nov = (function (exports) {
 'use strict';
 
