@@ -29,8 +29,7 @@ npm run build
 ```
 {
     "main": "lib/index.cjs.js",
-    "module": "lib/index.es.js",
-    "browser": "lib/nov.min.js"
+    "module": "lib/index.es.js"
 }
 ```
 
