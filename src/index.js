@@ -10,19 +10,7 @@ const config = {
 const LOADED = 'LOADED'
 const LOGHEAD = '[nov-wechat]'
 
-let scriptLoad = null, dmp = false
-
-let pageLoad = new Promise(function(resolve, reject) {
-    //fix Safari font cache bug
-    //https://segmentfault.com/q/1010000007319171/a-1020000007347261
-    if (isIPhone()) {
-        window.addEventListener('load', function() {
-            resolve(LOADED)
-        })
-    } else {
-        resolve('OK')
-    }
-})
+let scriptLoad = null, dmp = false, pageLoad = null
 
 function setConfig({jsApiList, debugFlag}) {
     if (!scriptLoad) {
@@ -114,8 +102,10 @@ function auth(isSilence = true) {
     let href = window.location.origin + window.location.pathname
     if (!/.lenovo.com.cn/.test(href)) {
         console.error(LOGHEAD, '网关不支持除 lenovo.com.cn 以外的域名授权。')
+        return null
     } else if (!isWeiXin()) {
         console.warn(LOGHEAD, '需要在微信下打开窗口')
+        return null
     }
 
     let jumpUrl = ['http://weixin.lenovo.com.cn/service/gateway/']
@@ -145,6 +135,19 @@ function auth(isSilence = true) {
     if (jumpUrl.length > 1) {
         if (dmp) {
             window.location.search ? jumpUrl.push(window.location.search + '&dmp=1') : jumpUrl.push('?dmp=1')
+        }
+        if (!pageLoad) {
+            pageLoad = new Promise(function(resolve, reject) {
+                //fix Safari font cache bug
+                //https://segmentfault.com/q/1010000007319171/a-1020000007347261
+                if (isIPhone()) {
+                    window.addEventListener('load', function() {
+                        resolve(LOADED)
+                    })
+                } else {
+                    resolve('OK')
+                }
+            })
         }
         pageLoad.then(() => {
             sessionStorage.setItem('nov-url-hash', window.location.hash)

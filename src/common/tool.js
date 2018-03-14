@@ -23,7 +23,7 @@ const ua = window.navigator.userAgent.toLowerCase()
  * @returns {boolean}
  */
 export function isWeiXin() {
-    return ua.includes('micromessenger')
+    return ua.indexOf('micromessenger') > -1
 }
 
 /**
