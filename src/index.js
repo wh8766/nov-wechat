@@ -99,7 +99,8 @@ export const initWechatJSSDK = function({jsApiList = config.jsApiList, debugFlag
  * @param isSilence
  */
 function auth(isSilence = true) {
-    let href = window.location.origin + window.location.pathname
+    let location = window.location
+    let href = location.origin + location.pathname + location.search
     if (!/.lenovo.com.cn/.test(href)) {
         console.error(LOGHEAD, '网关不支持除 lenovo.com.cn 以外的域名授权。')
         return null
