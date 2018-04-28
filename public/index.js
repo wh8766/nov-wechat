@@ -1,4 +1,4 @@
-//@copyright Lenovo service wechat jssdk, version: 0.2.3
+//@copyright Lenovo service wechat jssdk, version: 0.2.4
 var nov = (function (exports) {
 'use strict';
 
@@ -210,6 +210,8 @@ var config = {
 
 var LOADED = 'LOADED';
 var LOGHEAD = '[nov-wechat]';
+var COOKIE_NAME_OPENID = 'lenovoservicewx_openid';
+var COOKIE_NAME_USER = 'wxuser';
 
 var scriptLoad = null,
     dmp = false,
@@ -324,7 +326,7 @@ function auth() {
 
     var jumpUrl = ['http://weixin.lenovo.com.cn/service/gateway/'];
 
-    var user = getCookie('wxuser'),
+    var user = getCookie(COOKIE_NAME_USER),
         userInfo = null;
     if (user) {
         userInfo = decode(user);
@@ -332,7 +334,7 @@ function auth() {
         jumpUrl.push('NonsilentAuth?url=' + href);
     }
 
-    var openid = getCookie('openid') || getUrlParam('openid');
+    var openid = getCookie(COOKIE_NAME_OPENID) || getUrlParam('openid');
     if (!openid && userInfo) {
         // 如果有完整的info 信息，就从info 里获取openid
         try {

@@ -9,6 +9,8 @@ const config = {
 
 const LOADED = 'LOADED'
 const LOGHEAD = '[nov-wechat]'
+const COOKIE_NAME_OPENID = 'lenovoservicewx_openid'
+const COOKIE_NAME_USER = 'wxuser'
 
 let scriptLoad = null, dmp = false, pageLoad = null
 
@@ -111,14 +113,14 @@ function auth(isSilence = true) {
 
     let jumpUrl = ['http://weixin.lenovo.com.cn/service/gateway/']
 
-    let user = getCookie('wxuser'), userInfo = null
+    let user = getCookie(COOKIE_NAME_USER), userInfo = null
     if (user) {
         userInfo = decode(user)
     } else if (!isSilence) {
         jumpUrl.push('NonsilentAuth?url='+href)
     }
 
-    let openid = getCookie('openid') || getUrlParam('openid')
+    let openid = getCookie(COOKIE_NAME_OPENID) || getUrlParam('openid')
     if (!openid && userInfo) {
         // 如果有完整的info 信息，就从info 里获取openid
         try {
