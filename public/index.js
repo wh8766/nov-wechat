@@ -1,4 +1,4 @@
-//@copyright Lenovo service wechat jssdk, version: 0.2.4
+//@copyright Lenovo service wechat jssdk, version: 0.2.5
 var nov = (function (exports) {
 'use strict';
 
@@ -108,7 +108,12 @@ function getJssdkConfig() {
 
         xhr.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
-                resolve(JSON.parse(this.responseText));
+                try {
+                    resolve(JSON.parse(this.responseText));
+                } catch (e) {
+                    console.log(this.responseText);
+                    reject(e);
+                }
             }
         });
         xhr.addEventListener("error", function (error) {
@@ -203,6 +208,16 @@ function decode(data) {
     return utf8to16(base64decode(data));
 }
 
+var toConsumableArray = function (arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+    return arr2;
+  } else {
+    return Array.from(arr);
+  }
+};
+
 var config = {
     jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'],
     defaultImage: 'http://driverdl.lenovo.com.cn/FE/static/image/lenovo-share.jpg'
@@ -243,7 +258,7 @@ function setConfig(_ref) {
             timestamp: res.data.timestamp, // 必填，生成签名的时间戳
             nonceStr: res.data.noncestr, // 必填，生成签名的随机串
             signature: res.data.signature, // 必填，签名，见附录1
-            jsApiList: config.jsApiList
+            jsApiList: [].concat(toConsumableArray(config.jsApiList))
         });
 
         return new Promise(function (resolve, reject) {
@@ -273,10 +288,13 @@ function setConfig(_ref) {
  *  <li>success</li>
  *  <li>cancel</li>
  * </ul>
+ * @param jsApiList
  * @returns {Promise<Object>}
  */
 var initWechatShare = function initWechatShare(options) {
-    return initWechatJSSDK({ jsApiList: config.jsApiList }).then(function (wx) {
+    var jsApiList = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
+    return initWechatJSSDK({ jsApiList: jsApiList }).then(function (wx) {
         var cfg = _extends({
             desc: options.description,
             link: options.link || location.href,
@@ -284,7 +302,7 @@ var initWechatShare = function initWechatShare(options) {
         }, options);
         wx.onMenuShareTimeline(cfg);
         wx.onMenuShareAppMessage(cfg);
-        return 'ok';
+        return wx;
     });
 };
 
@@ -292,7 +310,7 @@ var initWechatShare = function initWechatShare(options) {
  * 设置指定的微信 JSSDK 权限
  * @param jsApiList
  * @param debugFlag
- * @returns {Promise}
+ * @returns {Promise<Object>}
  */
 var initWechatJSSDK = function initWechatJSSDK(_ref2) {
     var _ref2$jsApiList = _ref2.jsApiList,
@@ -310,6 +328,7 @@ var initWechatJSSDK = function initWechatJSSDK(_ref2) {
 /**
  * 授权并获取内容，静默仅获取openid，非静默下获取userInfo
  * @param isSilence
+ * @returns {String|Object|null}
  */
 function auth() {
     var isSilence = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;

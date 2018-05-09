@@ -10,7 +10,12 @@ export function getJssdkConfig() {
 
         xhr.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
-                resolve(JSON.parse(this.responseText))
+                try {
+                    resolve(JSON.parse(this.responseText))
+                } catch (e) {
+                    console.log(this.responseText)
+                    reject(e)
+                }
             }
         });
         xhr.addEventListener("error", function(error) {

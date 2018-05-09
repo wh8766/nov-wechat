@@ -37,7 +37,7 @@ function setConfig({jsApiList, debugFlag}) {
             timestamp: res.data.timestamp, // 必填，生成签名的时间戳
             nonceStr: res.data.noncestr, // 必填，生成签名的随机串
             signature: res.data.signature,// 必填，签名，见附录1
-            jsApiList: config.jsApiList
+            jsApiList: [...config.jsApiList]
         });
 
         return new Promise((resolve, reject) => {
@@ -67,10 +67,11 @@ function setConfig({jsApiList, debugFlag}) {
  *  <li>success</li>
  *  <li>cancel</li>
  * </ul>
+ * @param jsApiList
  * @returns {Promise<Object>}
  */
-export const initWechatShare = function (options) {
-    return initWechatJSSDK({jsApiList: config.jsApiList}).then(wx => {
+export const initWechatShare = function (options, jsApiList = []) {
+    return initWechatJSSDK({jsApiList: jsApiList}).then(wx => {
         let cfg = _extends({
             desc: options.description,
             link: options.link || location.href,
@@ -78,7 +79,7 @@ export const initWechatShare = function (options) {
         }, options)
         wx.onMenuShareTimeline(cfg);
         wx.onMenuShareAppMessage(cfg);
-        return 'ok'
+        return wx
     })
 }
 
@@ -86,7 +87,7 @@ export const initWechatShare = function (options) {
  * 设置指定的微信 JSSDK 权限
  * @param jsApiList
  * @param debugFlag
- * @returns {Promise}
+ * @returns {Promise<Object>}
  */
 export const initWechatJSSDK = function({jsApiList = config.jsApiList, debugFlag = false}) {
     if (!isWeiXin()) {
@@ -99,6 +100,7 @@ export const initWechatJSSDK = function({jsApiList = config.jsApiList, debugFlag
 /**
  * 授权并获取内容，静默仅获取openid，非静默下获取userInfo
  * @param isSilence
+ * @returns {String|Object|null}
  */
 function auth(isSilence = true) {
     let location = window.location

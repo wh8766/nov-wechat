@@ -109,15 +109,16 @@ if(userInfoStr) {
 
     Promise<Object wx> initWechatShare function (options)
     
-options 参数内容
-- title 标题
-- imgUrl 分享图片（旧版参数：image）
-- desc 分享描述（旧版参数：description）
-- link 分享链接
-- type 分享类型,music、video或link，不填默认为link
-- dataUrl 如果type是music或video，则要提供数据链接，默认为空
-- success 分享成功回调
-- cancel 取消分享回调
+- options 参数内容
+    - title 标题
+    - imgUrl 分享图片（旧版参数：image）
+    - desc 分享描述（旧版参数：description）
+    - link 分享链接
+    - type 分享类型,music、video或link，不填默认为link
+    - dataUrl 如果type是music或video，则要提供数据链接，默认为空
+    - success 分享成功回调
+    - cancel 取消分享回调
+- jsApiList 额外的权限（可选）
 
 设置微信分享，为方便使用做的封装，仅注册了微信JSSDK的`onMenuShareTimeline` `onMenuShareAppMessage` 两个权限。
 如果需要更多分享能力，请使用`initWechatJSSDK` 得到`wx` 对象后自行处理。
@@ -142,7 +143,7 @@ initWechatShare({
 
     Promise<Object wx> initWechatJSSDK function({jsApiList = config.jsApiList, debugFlag = false})
 
-设置指定的微信 JSSDK 权限，Promise resolve 时，相当于`wx.ready`。
+设置指定的微信 JSSDK 权限，将在`onMenuShareTimeline` `onMenuShareAppMessage` 之上追加，Promise resolve 时，相当于`wx.ready`。
 
 同一个url仅需调用一次，对于变化url的SPA的web app可在每次url变化时进行调用。
 更多信息请参考微信JSSDK文档：https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141115
