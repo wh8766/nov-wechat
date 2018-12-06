@@ -42,7 +42,7 @@ npm run build
 npm install nov-wechat 
 ```
 
-注意：由于微信JSSDK 更新和废弃了部分接口，组件内部将抹平这部分差异，和旧内容保持兼容。
+`0.2.6` 注意：由于微信JSSDK 更新和废弃了部分接口，组件内部将抹平这部分差异。
 https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141115
 
 ```javascript
