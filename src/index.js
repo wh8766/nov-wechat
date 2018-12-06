@@ -3,7 +3,7 @@ import {getJssdkConfig} from "./api";
 import {decode} from "./common/base64";
 
 const config = {
-    jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'],
+    jsApiList: ['updateTimelineShareData', 'updateAppMessageShareData'],
     defaultImage: 'http://driverdl.lenovo.com.cn/FE/static/image/lenovo-share.jpg'
 }
 
@@ -16,7 +16,7 @@ let scriptLoad = null, dmp = false, pageLoad = null
 
 function setConfig({jsApiList, debugFlag}) {
     if (!scriptLoad) {
-        scriptLoad = singleLoad('//res.wx.qq.com/open/js/jweixin-1.2.0.js').then(() => {
+        scriptLoad = singleLoad('//res.wx.qq.com/open/js/jweixin-1.4.0.js').then(() => {
             return LOADED
         })
     }
@@ -73,12 +73,13 @@ function setConfig({jsApiList, debugFlag}) {
 export const initWechatShare = function (options, jsApiList = []) {
     return initWechatJSSDK({jsApiList: jsApiList}).then(wx => {
         let cfg = _extends({
+            title: '未设置标题',
             desc: options.description,
             link: options.link || location.href,
             imgUrl: options.image || config.defaultImage
         }, options)
-        wx.onMenuShareTimeline(cfg);
-        wx.onMenuShareAppMessage(cfg);
+        wx.updateTimelineShareData(cfg);
+        wx.updateAppMessageShareData(cfg);
         return wx
     })
 }

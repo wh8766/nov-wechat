@@ -1,6 +1,6 @@
 {
     "name": "nov-wechat",
-    "version": "0.2.5",
+    "version": "0.2.6",
     "description": "Lenovo service wechat jssdk.",
     "homepage": "https://github.com/wh8766/nov-wechat",
     "author": "w.hao <wh8766@qq.com>",
@@ -14,7 +14,7 @@
         "build": "rm -rf lib && rollup -c",
         "watch": "rollup -c -w",
         "dev": "npm-run-all --parallel start watch",
-        "start": "serve public --port=80"
+        "start": "serve -l 80 public"
     },
     "dependencies": {},
     "devDependencies": {
@@ -30,7 +30,7 @@
         "rollup-plugin-babel": "^3.0.3",
         "rollup-plugin-node-resolve": "^3.0.3",
         "rollup-plugin-uglify": "^3.0.0",
-        "serve": "7.0.0"
+        "serve": "^10.1.1"
     },
     "engines": {
         "node": ">= 6.0.0",

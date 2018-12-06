@@ -1,4 +1,4 @@
-//@copyright Lenovo service wechat jssdk, version: 0.2.5
+//@copyright Lenovo service wechat jssdk, version: 0.2.6
 var nov = (function (exports) {
 'use strict';
 
@@ -219,7 +219,7 @@ var toConsumableArray = function (arr) {
 };
 
 var config = {
-    jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage'],
+    jsApiList: ['updateTimelineShareData', 'updateAppMessageShareData'],
     defaultImage: 'http://driverdl.lenovo.com.cn/FE/static/image/lenovo-share.jpg'
 };
 
@@ -237,7 +237,7 @@ function setConfig(_ref) {
         debugFlag = _ref.debugFlag;
 
     if (!scriptLoad) {
-        scriptLoad = singleLoad('//res.wx.qq.com/open/js/jweixin-1.2.0.js').then(function () {
+        scriptLoad = singleLoad('//res.wx.qq.com/open/js/jweixin-1.4.0.js').then(function () {
             return LOADED;
         });
     }
@@ -296,12 +296,13 @@ var initWechatShare = function initWechatShare(options) {
 
     return initWechatJSSDK({ jsApiList: jsApiList }).then(function (wx) {
         var cfg = _extends({
+            title: '未设置标题',
             desc: options.description,
             link: options.link || location.href,
             imgUrl: options.image || config.defaultImage
         }, options);
-        wx.onMenuShareTimeline(cfg);
-        wx.onMenuShareAppMessage(cfg);
+        wx.updateTimelineShareData(cfg);
+        wx.updateAppMessageShareData(cfg);
         return wx;
     });
 };

@@ -42,6 +42,9 @@ npm run build
 npm install nov-wechat 
 ```
 
+注意：由于微信JSSDK 更新和废弃了部分接口，组件内部将抹平这部分差异，和旧内容保持兼容。
+https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141115
+
 ```javascript
 import {initWechatShare, getUserInfo, getOpenid} from 'nov-wechat'
 
@@ -120,7 +123,7 @@ if(userInfoStr) {
     - cancel 取消分享回调
 - jsApiList 额外的权限（可选）
 
-设置微信分享，为方便使用做的封装，仅注册了微信JSSDK的`onMenuShareTimeline` `onMenuShareAppMessage` 两个权限。
+设置微信分享，为方便使用做的封装，仅注册了微信JSSDK的`updateTimelineShareData` `updateAppMessageShareData` （微信JSSDK 1.4.0 更新内容）两个权限。
 如果需要更多分享能力，请使用`initWechatJSSDK` 得到`wx` 对象后自行处理。
 
 同一个url仅需调用一次，对于变化url的SPA的web app可在每次url变化时进行调用。
@@ -143,7 +146,7 @@ initWechatShare({
 
     Promise<Object wx> initWechatJSSDK function({jsApiList = config.jsApiList, debugFlag = false})
 
-设置指定的微信 JSSDK 权限，将在`onMenuShareTimeline` `onMenuShareAppMessage` 之上追加，Promise resolve 时，相当于`wx.ready`。
+设置指定的微信 JSSDK 权限，将在`updateTimelineShareData` `updateAppMessageShareData` 之上追加，Promise resolve 时，相当于`wx.ready`。
 
 同一个url仅需调用一次，对于变化url的SPA的web app可在每次url变化时进行调用。
 更多信息请参考微信JSSDK文档：https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141115
@@ -213,7 +216,8 @@ initWechatJSSDK({
 ## 在线测试
 
 由于需要工作在lenovo.com.cn 域名下，请配置host
-
+    
+    # example
     115.28.154.221			ayouvi.lenovo.com.cn
 
 配置后访问进行测试：
