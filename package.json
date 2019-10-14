@@ -10,6 +10,7 @@
     },
     "main": "lib/index.es.js",
     "module": "lib/index.es.js",
+    "types": "./lib/index.d.ts",
     "scripts": {
         "build": "rm -rf lib && rollup -c",
         "watch": "rollup -c -w",

@@ -124,7 +124,7 @@ if(userInfoStr) {
 - jsApiList 额外的权限（可选）
 
 设置微信分享，为方便使用做的封装，仅注册了微信JSSDK的`updateTimelineShareData` `updateAppMessageShareData` （微信JSSDK 1.4.0 更新内容）两个权限。
-如果需要更多分享能力，请使用`initWechatJSSDK` 得到`wx` 对象后自行处理。
+如果需要更多能力，请使用`initWechatJSSDK` 得到`wx` 对象后自行处理。
 
 同一个url仅需调用一次，对于变化url的SPA的web app可在每次url变化时进行调用。
 
