@@ -1,6 +1,6 @@
 {
     "name": "nov-wechat",
-    "version": "0.2.6",
+    "version": "0.2.7",
     "description": "Lenovo service wechat jssdk.",
     "homepage": "https://github.com/wh8766/nov-wechat",
     "author": "w.hao <wh8766@qq.com>",
@@ -10,7 +10,7 @@
     },
     "main": "lib/index.es.js",
     "module": "lib/index.es.js",
-    "types": "./lib/index.d.ts",
+    "types": "src/index.d.ts",
     "scripts": {
         "build": "rm -rf lib && rollup -c",
         "watch": "rollup -c -w",
