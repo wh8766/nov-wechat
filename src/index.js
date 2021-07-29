@@ -114,7 +114,7 @@ function auth(isSilence = true) {
         return null
     }
 
-    let jumpUrl = ['http://weixin.lenovo.com.cn/service/gateway/']
+    let jumpUrl = ['https://weixin.lenovo.com.cn/service/gateway/']
 
     let user = getCookie(COOKIE_NAME_USER), userInfo = null
     if (user) {
