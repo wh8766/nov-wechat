@@ -31,7 +31,7 @@
         "rollup-plugin-babel": "^3.0.3",
         "rollup-plugin-node-resolve": "^3.0.3",
         "rollup-plugin-uglify": "^3.0.0",
-        "serve": "^10.1.1"
+        "serve": "^14.1.1"
     },
     "engines": {
         "node": ">= 6.0.0",
